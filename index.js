@@ -49,15 +49,17 @@ app.get("/api/gettingotpdata", async (req, res) => {
   }
 });
 
-
-app.delete("/api/deleteData", async (req, res) => {
+app.delete("/api/deleteData/:id", async (req, res) => {
   try {
-    const deleteData = await CONTENT_MODEL.findOneAndDelete({});
+    // const deleteData = await CONTENT_MODEL.findOneAndDelete({});
+    // const deleteData = req.params.id;
+    const deleteData = await CONTENT_MODEL.findByIdAndDelete( req.params.id);
+    return res.json({ success: true });
   } catch (error) {
-    res.status(400).json({ success: false });
+    res.status(500).json({ success: false });
+    // res.status(500).send(error);
   }
 });
-
 
 const port = process.env.PORT || 5000; // process.env.PORT gives the port of hosted application, which is automatically defined by deployment platform
 
@@ -74,7 +76,6 @@ if (process.env.NODE_ENV === "production") {
     );
   });
 }
-
 
 connectdb().then(() => {
   app.listen(port, () => console.log(`server is running at ${port}`));
